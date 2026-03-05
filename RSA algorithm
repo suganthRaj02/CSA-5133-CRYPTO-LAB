@@ -1,0 +1,48 @@
+import math
+
+p = int(input("Enter first prime number (p): "))
+q = int(input("Enter second prime number (q): "))
+
+n = p * q
+phi = (p - 1) * (q - 1)
+
+e = int(input("Enter public exponent (e): "))
+
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
+while gcd(e, phi) != 1:
+    print("e must be coprime with phi. Enter another value.")
+    e = int(input("Enter public exponent (e): "))
+
+def mod_inverse(e, phi):
+    for d in range(1, phi):
+        if (e * d) % phi == 1:
+            return d
+
+d = mod_inverse(e, phi)
+
+print("\nPublic Key (e, n):", (e, n))
+print("Private Key (d, n):", (d, n))
+
+def encrypt(text):
+    encrypted = []
+    for char in text:
+        encrypted.append(pow(ord(char), e, n))
+    return encrypted
+
+def decrypt(cipher):
+    decrypted = ""
+    for num in cipher:
+        decrypted += chr(pow(num, d, n))
+    return decrypted
+
+plaintext = input("\nEnter Text to Encrypt: ")
+
+ciphertext = encrypt(plaintext)
+print("Encrypted Data:", ciphertext)
+
+decrypted_text = decrypt(ciphertext)
+print("Decrypted Text:", decrypted_text)
