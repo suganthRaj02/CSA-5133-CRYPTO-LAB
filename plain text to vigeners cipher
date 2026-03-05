@@ -1,0 +1,43 @@
+def vigenere_encrypt(text, key):
+    result = ""
+    key = key.upper()
+    j = 0
+
+    for i in text:
+        if i.isalpha():
+            shift = ord(key[j % len(key)]) - ord('A')
+            base = ord('A') if i.isupper() else ord('a')
+            result += chr((ord(i) - base + shift) % 26 + base)
+            j += 1
+        else:
+            result += i
+    return result
+
+
+def vigenere_decrypt(text, key):
+    result = ""
+    key = key.upper()
+    j = 0
+
+    for i in text:
+        if i.isalpha():
+            shift = ord(key[j % len(key)]) - ord('A')
+            base = ord('A') if i.isupper() else ord('a')
+            result += chr((ord(i) - base - shift) % 26 + base)
+            j += 1
+        else:
+            result += i
+    return result
+
+
+text = input("Enter text: ")
+key = input("Enter key: ")
+
+choice = input("Type 'E' for Encrypt or 'D' for Decrypt: ").upper()
+
+if choice == 'E':
+    print("Ciphertext:", vigenere_encrypt(text, key))
+elif choice == 'D':
+    print("Plaintext:", vigenere_decrypt(text, key))
+else:
+    print("Invalid choice")
