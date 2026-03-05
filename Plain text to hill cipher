@@ -1,0 +1,39 @@
+# 2x2 Key Matrix (must be invertible mod 26)
+K = [[3, 3],
+     [2, 5]]
+
+# Inverse of K mod 26
+K_inv = [[15, 17],
+         [20, 9]]
+
+
+def process(text, matrix):
+    text = text.upper().replace(" ", "")
+    
+    if len(text) % 2 != 0:
+        text += "X"
+
+    result = ""
+
+    for i in range(0, len(text), 2):
+        a = ord(text[i]) - 65
+        b = ord(text[i+1]) - 65
+
+        c1 = (matrix[0][0]*a + matrix[0][1]*b) % 26
+        c2 = (matrix[1][0]*a + matrix[1][1]*b) % 26
+
+        result += chr(c1 + 65)
+        result += chr(c2 + 65)
+
+    return result
+
+
+text = input("Enter text: ")
+choice = input("Type 'E' for Encrypt or 'D' for Decrypt: ").upper()
+
+if choice == 'E':
+    print("Ciphertext:", process(text, K))
+elif choice == 'D':
+    print("Plaintext:", process(text, K_inv))
+else:
+    print("Invalid choice")
