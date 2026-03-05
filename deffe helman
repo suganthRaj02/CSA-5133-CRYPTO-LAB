@@ -1,0 +1,37 @@
+p = int(input("Enter a prime number (p): "))
+g = int(input("Enter a generator (g): "))
+
+a = int(input("Enter Alice private key: "))
+b = int(input("Enter Bob private key: "))
+
+A = pow(g, a, p)
+B = pow(g, b, p)
+
+print("\nAlice Public Key:", A)
+print("Bob Public Key:", B)
+
+alice_secret = pow(B, a, p)
+bob_secret = pow(A, b, p)
+
+print("\nShared Secret (Alice):", alice_secret)
+print("Shared Secret (Bob):", bob_secret)
+
+def encrypt(text, key):
+    result = ""
+    for char in text:
+        result += chr((ord(char) + key) % 256)
+    return result
+
+def decrypt(cipher, key):
+    result = ""
+    for char in cipher:
+        result += chr((ord(char) - key) % 256)
+    return result
+
+plaintext = input("\nEnter Text to Encrypt: ")
+
+ciphertext = encrypt(plaintext, alice_secret)
+print("Encrypted Text:", ciphertext)
+
+decrypted_text = decrypt(ciphertext, bob_secret)
+print("Decrypted Text:", decrypted_text)
