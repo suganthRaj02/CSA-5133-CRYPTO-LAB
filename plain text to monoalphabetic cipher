@@ -1,0 +1,31 @@
+def mono_encrypt(text, mapping):
+    return ''.join(
+        mapping.get(ch.upper(), ch).lower() if ch.islower() else mapping.get(ch, ch)
+        for ch in text
+    )
+
+
+def mono_decrypt(text, mapping):
+    # Reverse the mapping dictionary
+    reverse_mapping = {v: k for k, v in mapping.items()}
+    
+    return ''.join(
+        reverse_mapping.get(ch.upper(), ch).lower() if ch.islower() else reverse_mapping.get(ch, ch)
+        for ch in text
+    )
+
+
+mapping = dict(zip(
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+    "QWERTYUIOPASDFGHJKLZXCVBNM"
+))
+
+text = input("Enter text: ")
+choice = input("Type 'E' for Encrypt or 'D' for Decrypt: ").upper()
+
+if choice == 'E':
+    print("Cipher Text:", mono_encrypt(text, mapping))
+elif choice == 'D':
+    print("Plain Text:", mono_decrypt(text, mapping))
+else:
+    print("Invalid choice")
