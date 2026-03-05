@@ -1,0 +1,64 @@
+def encrypt(text, key):
+    text = text.replace(" ", "")
+    col = len(key)
+    row = len(text) // col + (len(text) % col != 0)
+
+    # Fill matrix row-wise
+    matrix = []
+    k = 0
+    for i in range(row):
+        r = []
+        for j in range(col):
+            if k < len(text):
+                r.append(text[k])
+                k += 1
+            else:
+                r.append('X')
+        matrix.append(r)
+
+    # Read column-wise based on sorted key
+    cipher = ""
+    key_order = sorted(range(len(key)), key=lambda x: key[x])
+
+    for c in key_order:
+        for i in range(row):
+            cipher += matrix[i][c]
+
+    return cipher
+
+
+def decrypt(cipher, key):
+    col = len(key)
+    row = len(cipher) // col
+
+    # Create empty matrix
+    matrix = [[None] * col for _ in range(row)]
+
+    # Determine column order
+    key_order = sorted(range(len(key)), key=lambda x: key[x])
+
+    k = 0
+    for c in key_order:
+        for i in range(row):
+            matrix[i][c] = cipher[k]
+            k += 1
+
+    # Read row-wise
+    plain = ""
+    for i in range(row):
+        for j in range(col):
+            plain += matrix[i][j]
+
+    return plain.rstrip('X')
+
+
+text = input("Enter text: ")
+key = input("Enter key: ")
+choice = input("Type 'E' for Encrypt or 'D' for Decrypt: ").upper()
+
+if choice == 'E':
+    print("Ciphertext:", encrypt(text, key))
+elif choice == 'D':
+    print("Plaintext:", decrypt(text, key))
+else:
+    print("Invalid choice")
