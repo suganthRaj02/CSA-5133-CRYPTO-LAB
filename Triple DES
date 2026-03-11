@@ -1,0 +1,130 @@
+
+# XOR FUNCTION
+def xor(a, b):
+    result = ""
+    for i in range(len(a)):
+        if a[i] == b[i]:
+            result += "0"
+        else:
+            result += "1"
+    return result
+
+
+# SIMPLIFIED DES ENCRYPT
+def des_encrypt(text, key):
+
+    left = text[:32]
+    right = text[32:]
+
+    for i in range(16):
+        temp = right
+        f = xor(right, key[:32])   # simple round function
+        right = xor(left, f)
+        left = temp
+
+    return right + left
+
+
+# -------------------------
+# SIMPLIFIED DES DECRYPT
+# -------------------------
+def des_decrypt(text, key):
+
+    left = text[:32]
+    right = text[32:]
+
+    for i in range(16):
+        temp = right
+        f = xor(right, key[:32])
+        right = xor(left, f)
+        left = temp
+
+    return right + left
+
+
+# -------------------------
+# TRIPLE DES ALGORITHM
+# EDE MODE
+# -------------------------
+
+def triple_des_encrypt(plaintext, k1, k2, k3):
+
+    # Step 1: Encrypt with Key1
+    step1 = des_encrypt(plaintext, k1)
+
+    # Step 2: Decrypt with Key2
+    step2 = des_decrypt(step1, k2)
+
+    # Step 3: Encrypt with Key3
+    cipher = des_encrypt(step2, k3)
+
+    return cipher
+
+
+def triple_des_decrypt(cipher, k1, k2, k3):
+
+    # Step 1: Decrypt with Key3
+    step1 = des_decrypt(cipher, k3)
+
+    # Step 2: Encrypt with Key2
+    step2 = des_encrypt(step1, k2)
+
+    # Step 3: Decrypt with Key1
+    plaintext = des_decrypt(step2, k1)
+
+    return plaintext
+
+
+# -------------------------
+# MAIN PROGRAM
+# -------------------------
+
+print("\nTRIPLE DES IMPLEMENTATION")
+print("1. Encrypt")
+print("2. Decrypt")
+
+choice = int(input("Enter choice: "))
+
+if choice == 1:
+
+    plaintext = input("Enter 64-bit binary plaintext: ")
+
+    if len(plaintext) != 64:
+        print("Error: Plaintext must be exactly 64 bits")
+        exit()
+
+    k1 = input("Enter Key1 (48 bits): ")
+    k2 = input("Enter Key2 (48 bits): ")
+    k3 = input("Enter Key3 (48 bits): ")
+
+    if len(k1) != 48 or len(k2) != 48 or len(k3) != 48:
+        print("Error: Each key must be 48 bits")
+        exit()
+
+    cipher = triple_des_encrypt(plaintext, k1, k2, k3)
+
+    print("\nCipher Text:", cipher)
+
+
+elif choice == 2:
+
+    cipher = input("Enter 64-bit cipher text: ")
+
+    if len(cipher) != 64:
+        print("Error: Cipher text must be 64 bits")
+        exit()
+
+    k1 = input("Enter Key1 (48 bits): ")
+    k2 = input("Enter Key2 (48 bits): ")
+    k3 = input("Enter Key3 (48 bits): ")
+
+    if len(k1) != 48 or len(k2) != 48 or len(k3) != 48:
+        print("Error: Each key must be 48 bits")
+        exit()
+
+    plaintext = triple_des_decrypt(cipher, k1, k2, k3)
+
+    print("\nDecrypted Text:", plaintext)
+
+else:
+    print("Invalid Choice")
